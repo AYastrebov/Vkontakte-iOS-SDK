@@ -97,6 +97,7 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView 
 {
+    NSLog(@"%@",webView.request.URL.absoluteString);
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES]; 
     _hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:_hud];
@@ -108,7 +109,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView 
 {
     NSString *webViewText = [_webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.innerText"];
-    
+
     if ([webViewText caseInsensitiveCompare:@"security breach"] == NSOrderedSame) 
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Невозможно авторизироваться" 
@@ -153,7 +154,7 @@
         
         if (self.delegate && [self.delegate respondsToSelector:@selector(authorizationDidSucceedWithToke:userId:expDate:)]) 
         {
-            [self.delegate authorizationDidSucceedWithToke:accessToken 
+            [self.delegate authorizationDidSucceedWithToke:accessToken
                                                 userId:user_id 
                                                expDate:expirationDate];
         }

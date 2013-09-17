@@ -216,7 +216,7 @@
 
 #warning Provide your vkontakte app id
 NSString * const vkAppId = @"3424121";
-NSString * const vkPermissions = @"wall,photos,offline";
+NSString * const vkPermissions = @"wall,photos,offline,groups";
 NSString * const vkRedirectUrl = @"http://oauth.vk.com/blank.html";
 
 @synthesize delegate;
@@ -276,6 +276,21 @@ NSString * const vkRedirectUrl = @"http://oauth.vk.com/blank.html";
     {
         [self.delegate showVkontakteAuthController:navController];
     }
+}
+
+-(void)getPermissionToAccessGroups:(NSUInteger)groupId{
+    NSString *authLink = [NSString stringWithFormat:@"http://oauth.vk.com/oauth/authorize?client_id=%@&scope=%@&redirect_uri=%@&display=touch&response_type=token", vkAppId,vkPermissions,vkRedirectUrl];
+    NSURL *url = [NSURL URLWithString:authLink];
+    
+    VkontakteViewController *vkontakteViewController = [[VkontakteViewController alloc] initWithAuthLink:url];
+    vkontakteViewController.delegate = self;
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vkontakteViewController];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(showVkontakteAuthController:)])
+    {
+        [self.delegate showVkontakteAuthController:navController];
+    }
+
 }
 
 - (void)logout
@@ -376,6 +391,78 @@ NSString * const vkRedirectUrl = @"http://oauth.vk.com/blank.html";
     }
 }
 
+-(void)checkIfUserInGroupId:(NSUInteger)groupId needToSignAfterChecking:(BOOL)needToSign{
+    NSString *sendTextMessage = [NSString stringWithFormat:@"https://api.vk.com/method/groups.isMember?group_id=%d&user_id=%@",groupId,userId];
+    NSDictionary *result = [self sendRequest:sendTextMessage withCaptcha:NO];
+    NSString *errorMsg = [[result objectForKey:@"error"] objectForKey:@"error_msg"];
+    
+    if(errorMsg)
+    {
+        NSDictionary *errorDict = [result objectForKey:@"error"];
+        
+        if ([self.delegate respondsToSelector:@selector(vkontakteDidFailedWithError:)])
+        {
+            NSError *error = [NSError errorWithDomain:@"http://api.vk.com/method"
+                                                 code:[[errorDict objectForKey:@"error_code"] intValue]
+                                             userInfo:errorDict];
+            if (error.code == 5)
+            {
+                [self logout];
+            }
+            
+            [self.delegate vkontakteDidFailedWithError:error];
+        }
+    }
+    else{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(vkontakteDidFinishCheckingIfUserSignedTheGroup:)]){
+            [self.delegate vkontakteDidFinishCheckingIfUserSignedTheGroup:result];
+            if ([(NSNumber*)[result objectForKey:@"response"] intValue]==0){
+                if (needToSign) {
+                    [self signTheGroup:groupId];
+                }
+            }
+        }
+    }
+}
+
+-(void)signTheGroup:(NSUInteger)groupId{
+    if (![self isAuthorized]) return;
+    NSString *sendTextMessage = [NSString stringWithFormat:@"https://api.vk.com/method/groups.join?group_id=%d&access_token=%@",groupId,accessToken];
+    NSDictionary *result = [self sendRequest:sendTextMessage withCaptcha:NO];
+    
+    NSString *errorMsg = [[result objectForKey:@"error"] objectForKey:@"error_msg"];
+    if(errorMsg)
+    {
+        NSDictionary *errorDict = [result objectForKey:@"error"];
+        
+        if ([self.delegate respondsToSelector:@selector(vkontakteDidFailedWithError:)])
+        {
+            NSError *error = [NSError errorWithDomain:@"http://api.vk.com/method"
+                                                 code:[[errorDict objectForKey:@"error_code"] intValue]
+                                             userInfo:errorDict];
+            
+            if (error.code == 5)
+            {
+                [self logout];
+                
+            }else if (error.code == 7){
+                [self getPermissionToAccessGroups:groupId];
+            }
+            
+        }
+    }
+    else
+    {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(vkontakteDidFinishPostingToWall:)])
+        {
+            [self.delegate vkontakteDidFinishSigningTheGroup:result];
+        }
+        
+    }
+
+}
+
+
 - (void)postMessageToWall:(NSString *)message
 {
     if (![self isAuthorized]) return;
@@ -413,6 +500,7 @@ NSString * const vkRedirectUrl = @"http://oauth.vk.com/blank.html";
         {
             [self.delegate vkontakteDidFinishPostingToWall:result];
         }
+        
     }
 }
 
