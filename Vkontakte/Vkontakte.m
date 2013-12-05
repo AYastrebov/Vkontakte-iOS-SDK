@@ -280,33 +280,12 @@ NSString * const vkRedirectUrl = @"http://oauth.vk.com/blank.html";
 
 - (void)logout
 {
-    
-    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray* vkCookies1 = [cookies cookiesForURL:
-                           [NSURL URLWithString:@"http://api.vk.com"]];
-    NSArray* vkCookies2 = [cookies cookiesForURL:
-                           [NSURL URLWithString:@"http://vk.com"]];
-    NSArray* vkCookies3 = [cookies cookiesForURL:
-                           [NSURL URLWithString:@"http://login.vk.com"]];
-    NSArray* vkCookies4 = [cookies cookiesForURL:
-                           [NSURL URLWithString:@"http://oauth.vk.com"]];
-    
-    for (NSHTTPCookie* cookie in vkCookies1)
-    {
-        [cookies deleteCookie:cookie];
-    }
-    for (NSHTTPCookie* cookie in vkCookies2)
-    {
-        [cookies deleteCookie:cookie];
-    }
-    for (NSHTTPCookie* cookie in vkCookies3)
-    {
-        [cookies deleteCookie:cookie];
-    }
-    for (NSHTTPCookie* cookie in vkCookies4)
-    {
-        [cookies deleteCookie:cookie];
-    }
+	NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+	NSArray* aCookies = cookies.cookies;
+	for (NSHTTPCookie* cookie in aCookies) {
+		if ([cookie.domain hasSuffix:@"vk.com"])
+			[cookies deleteCookie:cookie];
+	}
     
     // Remove saved authorization information if it exists and it is
     // ok to clear it (logout, session invalid, app unauthorized)
