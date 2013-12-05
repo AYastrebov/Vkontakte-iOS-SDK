@@ -215,7 +215,7 @@
 @implementation Vkontakte
 
 #warning Provide your vkontakte app id
-NSString * const vkAppId = @"3424121";
+NSString * const vkAppId = @"";
 NSString * const vkPermissions = @"wall,photos,offline";
 NSString * const vkRedirectUrl = @"http://oauth.vk.com/blank.html";
 

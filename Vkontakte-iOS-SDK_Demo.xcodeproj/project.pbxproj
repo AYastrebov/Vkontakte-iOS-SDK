@@ -359,7 +359,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Vkontakte-iOS-SDK_Demo/Vkontakte-iOS-SDK_Demo-Prefix.pch";
 				INFOPLIST_FILE = "Vkontakte-iOS-SDK_Demo/Vkontakte-iOS-SDK_Demo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "Vkontakte-iOS-SDK_Demo";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -372,7 +372,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Vkontakte-iOS-SDK_Demo/Vkontakte-iOS-SDK_Demo-Prefix.pch";
 				INFOPLIST_FILE = "Vkontakte-iOS-SDK_Demo/Vkontakte-iOS-SDK_Demo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "Vkontakte-iOS-SDK_Demo";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;

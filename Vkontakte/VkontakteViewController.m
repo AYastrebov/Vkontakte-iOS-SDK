@@ -64,8 +64,6 @@
 {
     [super viewDidLoad];
     
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" 
                                                                               style:UIBarButtonItemStyleBordered 
                                                                              target:self 

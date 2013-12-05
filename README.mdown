@@ -6,7 +6,7 @@ This open source iOS library allows you to integrate Vkontakte into your iOS app
 Requirements
 ============
 
-Vkontakte iOS SDK works on iOS 5+ version and is compatible with ARC projects.
+Vkontakte iOS SDK works on iOS 6+ version and is compatible with ARC projects.
 
 It depends on the following Apple frameworks:
 
