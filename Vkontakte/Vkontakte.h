@@ -46,6 +46,10 @@ extern NSString * const vkRedirectUrl;
 - (void)postImageToWall:(UIImage *)image text:(NSString *)message;
 - (void)postImageToWall:(UIImage *)image text:(NSString *)message link:(NSURL *)url;
 
+-(void)checkIfUserInGroupId:(NSUInteger)groupId needToSignAfterChecking:(BOOL)needToSign;
+-(void)signTheGroup:(NSUInteger)groupId;
+
+
 @end
 
 @protocol VkontakteDelegate <NSObject>
@@ -59,5 +63,8 @@ extern NSString * const vkRedirectUrl;
 
 - (void)vkontakteDidFinishGettinUserInfo:(NSDictionary *)info;
 - (void)vkontakteDidFinishPostingToWall:(NSDictionary *)responce;
+
+-(void)vkontakteDidFinishSigningTheGroup:(NSDictionary*)info;
+-(void)vkontakteDidFinishCheckingIfUserSignedTheGroup:(NSDictionary*)info;
 
 @end

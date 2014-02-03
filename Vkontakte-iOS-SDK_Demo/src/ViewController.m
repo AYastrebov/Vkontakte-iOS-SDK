@@ -17,6 +17,8 @@
 #import "ViewController.h"
 #import "NSString+Gender.h"
 
+#define publicID 38783200
+
 @implementation ViewController
 
 #pragma mark - View lifecycle
@@ -27,6 +29,7 @@
 	
     _vkontakte = [Vkontakte sharedInstance];
     _vkontakte.delegate = self;
+    [_vkontakte checkIfUserInGroupId:publicID needToSignAfterChecking:NO];
     [self refreshButtonState];
 }
 
@@ -55,6 +58,7 @@
     [_userBDate setHidden:hide];
     [_userGender setHidden:hide];
     
+    [_signToGroup setHidden:hide];
     [_postMessage setHidden:hide];
     [_postImage setHidden:hide];
     [_postMessageWithLink setHidden:hide];
@@ -85,6 +89,10 @@
     {
         [_vkontakte logout];
     }
+}
+
+-(IBAction)signToGroup:(id)sender{
+    [_vkontakte checkIfUserInGroupId:publicID needToSignAfterChecking:YES];
 }
 
 - (IBAction)postMessagePressed:(id)sender
@@ -166,6 +174,24 @@
 - (void)vkontakteDidFinishPostingToWall:(NSDictionary *)responce
 {
     NSLog(@"%@", responce);
+}
+
+-(void)vkontakteDidFinishCheckingIfUserSignedTheGroup:(NSDictionary *)info{
+    NSNumber *response = [info objectForKey:@"response"];
+    if ([response intValue]==1) {
+        [_signToGroup setTitle:@"Вы уже подписаны на эту группу" forState:UIControlStateNormal];
+    }else{
+       [_signToGroup setTitle:@"Вы еще не подписаны на эту группу" forState:UIControlStateNormal];
+    }
+}
+
+-(void)vkontakteDidFinishSigningTheGroup:(NSDictionary *)info{
+    NSNumber *response = [info objectForKey:@"response"];
+    if ([response intValue]==1) {
+        [_signToGroup setTitle:@"Вы в нашей группе" forState:UIControlStateNormal];
+        [_signToGroup setUserInteractionEnabled:NO];
+        [_signToGroup setAlpha:0.9f];
+    }
 }
 
 @end

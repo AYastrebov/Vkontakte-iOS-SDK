@@ -32,12 +32,14 @@
     IBOutlet UIButton *_postMessageWithLink;
     IBOutlet UIButton *_postImageWithLink;
     IBOutlet UIButton *_postImageWithLinkAndText;
+    IBOutlet UIButton *_signToGroup;
     
     Vkontakte *_vkontakte;    
 }
 
 - (IBAction)loginPressed:(id)sender;
 
+- (IBAction)signToGroup:(id)sender;
 - (IBAction)postMessagePressed:(id)sender;
 - (IBAction)postImagePressed:(id)sender;
 - (IBAction)postMessageWithLinkPressed:(id)sender;
